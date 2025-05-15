@@ -1,0 +1,117 @@
+{
+    "ARM_ID_Analysis.ecl": {
+    "1. Script Overview": {
+    "Summary": "The ARM_ID_Analysis script processes clinical study data to generate aggregated insights at the arm group level. It consolidates data from multiple datasets, performs transformations, and produces structured outputs for reporting.",
+    "Functional Modules": [
+    "DATASET declarations: AACT.File_Clinical_Study, AACT.File_Clinical_Study_noclob, AACT.File_Arm_Groups, AACT.File_Results_Outcome_Analysis_Grp, AACT.File_Results_Outcome_Meas_Cat, AACT.File_Results_Baseline_Meas_Cat, AACT.File_Results_Partflow_Mlstn_Grp, AACT.File_Reported_Event_Cat_Grp",
+    "TRANSFORM logic: roll_rec for rollup aggregation, inline TRANSFORMs for dataset projections",
+    "PROJECT operations: roag, romc, rbmc, rpmg, recg",
+    "ROLLUP operation: Aggregates arm group data",
+    "OUTPUT operation: Generates sorted and structured output"
+    ],
+    "Data Pipelines Overview": "The script orchestrates data flows by merging clinical study datasets, joining arm group data, projecting result categories, rolling up aggregated data, and outputting a structured table for reporting."
+    },
+    "2. Complexity Metrics": {
+    "Total Lines of Code": 45,
+    "Dataset Count": 8,
+    "Transform Count and Types": {
+    "Inline TRANSFORMs": 6,
+    "Named TRANSFORMs": 1
+    },
+    "Join Analysis": {
+    "Join Count": 1,
+    "Join Types": ["LEFT OUTER"]
+    },
+    "Project, Sort, Dedup, Rollup Counts": {
+    "Project Count": 5,
+    "Sort Count": 2,
+    "Dedup Count": 0,
+    "Rollup Count": 1
+    },
+    "Child Workflows or Module Calls": 0,
+    "Output or Store Operations": 1,
+    "Conditional Logic Count": 0,
+    "Macro or Function Module Reuse": 0,
+    "Conversion Complexity Score": {
+    "Score (0–100)": 75,
+    "Reasoning": [
+    "Multiple incompatible features such as implicit schema typing and RECORD structures",
+    "Manual refactor points for JOINs and TRANSFORMs",
+    "Complex workflow orchestration with nested dataset projections"
+    ]
+    }
+    },
+    "3. Feature Compatibility Check": {
+    "Incompatible Features": [
+    "Implicit schema typing",
+    "RECORD structures",
+    "ROLLUP operation",
+    "FEW and UNSORTED options in TABLE"
+    ],
+    "Examples of Challenging Constructs": [
+    "RECORD structures for id_rec",
+    "ROLLUP aggregation with custom TRANSFORM logic",
+    "Implicit indexing through SORT operations"
+    ]
+    },
+    "4. Manual Adjustments for Java Spark Migration": {
+    "Transform Refactoring": "Refactor TRANSFORMs into Spark UDFs for inline logic and named transformations.",
+    "Schema Redefinition": "Convert RECORD structures into case classes or explicit schema definitions.",
+    "Join Handling Strategy": "Rewrite JOINs using Spark DataFrame join operations with equivalent LEFT OUTER logic.",
+    "Complex Ops Handling": "Replace ROLLUP with groupBy and aggregate functions in Spark.",
+    "Output Refactoring": "Rewrite OUTPUT operations to save results in Parquet or HDFS-compatible formats."
+    },
+    "5. Optimization Techniques in Spark": {
+    "Join Optimization": "Use broadcast joins for small datasets and shuffle joins for large datasets.",
+    "Partitioning Strategy": "Partition datasets based on arm_group_id for efficient processing.",
+    "Caching Strategy": "Cache intermediate results to avoid recomputation.",
+    "Code Optimization Techniques": "Leverage Catalyst optimizer hints and DataFrame API for performance tuning.",
+    "Refactor vs Rebuild Recommendation": {
+    "Approach": "Refactor with minimal changes",
+    "Justification": "The script's modular design and clear logic can be adapted to Spark with targeted refactoring, avoiding a complete rebuild."
+    }
+    },
+    "6. Cost Estimation": {
+    "Java Spark Runtime Cost": {
+    "Cluster Configuration": {
+    "Number of Executors": 10,
+    "Executor Memory": "16 GB",
+    "Driver Memory": "8 GB"
+    },
+    "Approximate Data Volume Processed": {
+    "Input Data": "50–100 GB",
+    "Output Data": "10–15 GB"
+    },
+    "Time Taken for Each Phase": {
+    "Shuffle-heavy Joins": "2 hours",
+    "Wide Transforms": "3 hours",
+    "Output Writes": "1 hour"
+    },
+    "Cost Model": {
+    "Pricing Basis": "Assuming $0.10 per DBU per hour",
+    "Total Estimated Cost": "$60–$120"
+    },
+    "Justification": [
+    "Cluster configuration ensures sufficient memory and parallelism for large datasets.",
+    "Pricing estimates are based on typical cloud provider costs for Spark workloads."
+    ]
+    }
+    },
+    "7. Code Fixing and Data Recon Testing Effort Estimation": {
+    "Estimated Effort in Hours": {
+    "Manual Refactoring": 20,
+    "Data Reconciliation Testing": 15,
+    "Syntax Translation Adjustments": 10,
+    "Optimization and Performance Tuning": 10
+    },
+    "Major Contributors to Effort": {
+    "Nested TRANSFORM Refactoring": 8,
+    "Output Refactoring for Spark Writes": 5,
+    "Schema Management Effort": 7
+    }
+    },
+    "8. API Cost": {
+    "apiCost": "0.013452 USD"
+    }
+    }
+    }

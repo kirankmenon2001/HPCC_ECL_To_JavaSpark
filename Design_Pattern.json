@@ -1,0 +1,79 @@
+{
+  "title": "ECL Design Pattern Analysis and Java Spark Optimization Recommendations",
+  "pattern_summary": [
+    { "pattern": "SF|ST|TAC|TSC|TAG|Tem|DS|TT|OO", "frequency": "3 occurrences", "percentage": "30%", "description": "Source File/Table + Transformation Arithmetic Calcs + Transformation Stats Calcs + Transformation Aggregates + Temporary Tables + Data Sort + Target Table + Other Operations" },
+    { "pattern": "SF|ST|SA|TAC|TSC|TAG|JL|Tem|DQ|DS|TT|OO", "frequency": "2 occurrences", "percentage": "20%", "description": "Source File/Table + Source API + Transformation Arithmetic Calcs + Transformation Stats Calcs + Transformation Aggregates + Join + Temporary Tables + Data Quality + Data Sort + Target Table + Other Operations" },
+    { "pattern": "SF|SA|TX|Tem|TF|OO", "frequency": "2 occurrences", "percentage": "20%", "description": "Source File + Source API + External Code Execution + Temporary Tables + Target File + Other Operations" },
+    { "pattern": "SF|ST|SA|DS|TF|TT|OO", "frequency": "1 occurrence", "percentage": "10%", "description": "Source File/Table + Source API + Data Sort + Target File + Target Table + Other Operations" },
+    { "pattern": "SF|ST|SA|TAC|TSC|TX|TAG|JL|Tem|DQ|DS|TF|TT|OO", "frequency": "1 occurrence", "percentage": "10%", "description": "Source File/Table + Source API + Transformation Arithmetic Calcs + Transformation Stats Calcs + External Code + Transformation Aggregates + Join + Temporary Tables + Data Quality + Data Sort + Target File + Target Table + Other Operations" },
+    { "pattern": "SF|ST|SA|TAC|TSC|TAG|JL|Tem|DQ|DM|DUN|DA|DS|TT|OO", "frequency": "1 occurrence", "percentage": "10%", "description": "Source File/Table + Source API + Transformation Arithmetic Calcs + Transformation Stats Calcs + Transformation Aggregates + Join + Temporary Tables + Data Quality + Data Merge + Data Union + Data Append + Data Sort + Target Table + Other Operations" }
+  ],
+  "detailed_patterns": [
+    {
+      "pattern": "SF|ST|TAC|TSC|TAG|Tem|DS|TT|OO",
+      "description": "This pattern involves reading from file and table sources, performing arithmetic and statistical calculations, applying aggregate functions, creating temporary tables, sorting data, and writing results to a table. It's commonly used for data exploration, analysis, and reporting with complex transformations.",
+      "spark_suitability": "Highly suitable",
+      "recommendations": [
+        "Use DataFrame API instead of RDD API for better optimization opportunities through Catalyst optimizer",
+        "Leverage Spark SQL for complex aggregations to benefit from query optimization",
+        "Persist intermediate DataFrames when reused multiple times in the workflow",
+        "Consider partitioning by key columns used in aggregations to reduce shuffle operations"
+      ]
+    },
+    {
+      "pattern": "SF|ST|SA|TAC|TSC|TAG|JL|Tem|DQ|DS|TT|OO",
+      "description": "This pattern combines data from multiple sources (files, tables, APIs), performs various transformations including arithmetic and statistical calculations, joins with other tables, includes data quality checks, and sorts before writing to a table. It's typically used for data integration workflows with quality control.",
+      "spark_suitability": "Well-suited",
+      "recommendations": [
+        "Broadcast smaller tables in joins to reduce shuffle operations",
+        "Implement data quality checks using DataFrame validations or custom UDFs",
+        "Use appropriate join strategies based on data characteristics (broadcast vs. sort-merge)",
+        "Consider caching intermediate results after expensive operations like joins"
+      ]
+    },
+    {
+      "pattern": "SF|SA|TX|Tem|TF|OO",
+      "description": "This pattern focuses on reading from file sources and APIs, executing external code for specialized processing, creating temporary files, and writing results to output files. It's commonly used for integrating with external systems and handling specialized file operations like spraying.",
+      "spark_suitability": "Conditionally suitable",
+      "recommendations": [
+        "Use foreachPartition for efficient external API calls to minimize connection overhead",
+        "Implement backoff strategies for API rate limiting",
+        "Consider using Spark's mapPartitions for batch processing of external calls",
+        "Leverage connection pooling when making multiple calls to the same external service"
+      ]
+    },
+    {
+      "pattern": "SF|ST|SA|DS|TF|TT|OO",
+      "description": "This pattern involves reading from multiple sources, sorting the data, and writing results to both files and tables. It's typically used for generating reports and preparing data for analysis without complex transformations.",
+      "spark_suitability": "Highly suitable",
+      "recommendations": [
+        "Use sortWithinPartitions when global sorting isn't required",
+        "Adjust the number of partitions before writing to match the target file system's block size",
+        "Consider repartitioning by sort key before sorting to improve performance",
+        "Use appropriate file formats (Parquet, ORC) that support predicate pushdown for better read performance"
+      ]
+    },
+    {
+      "pattern": "SF|ST|SA|TAC|TSC|TX|TAG|JL|Tem|DQ|DS|TF|TT|OO",
+      "description": "This comprehensive pattern includes almost all data processing aspects: multiple source types, various transformations, external code execution, joins, data quality checks, sorting, and multiple output targets. It represents complex data engineering workflows handling broken files and requiring extensive parsing.",
+      "spark_suitability": "Manageable with care",
+      "recommendations": [
+        "Break down complex transformations into manageable stages with appropriate caching",
+        "Use Spark's built-in functions instead of UDFs where possible for better performance",
+        "Implement custom partitioning strategies based on data skew characteristics",
+        "Monitor execution plans and shuffle operations to identify and address performance bottlenecks"
+      ]
+    },
+    {
+      "pattern": "SF|ST|SA|TAC|TSC|TAG|JL|Tem|DQ|DM|DUN|DA|DS|TT|OO",
+      "description": "This pattern extends the data quality and join pattern with additional DML operations including merge, union, and append. It represents sophisticated data integration workflows with complex data manipulation requirements and multi-step joins.",
+      "spark_suitability": "Suitable with tuning",
+      "recommendations": [
+        "Optimize merge operations using broadcast joins when possible",
+        "Use unionByName and coalesce for append operations to manage schema consistency and file count",
+        "Monitor for data skew and repartition datasets before heavy joins or unions",
+        "Profile input and output volumes to tune memory and parallelism parameters"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>File Details</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .header img {
+            height: 60px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.6em;
+            margin: 20px 0;
+        }
+
+        h2 { font-size: 1.4em; margin-top: 8px; }
+        h3 { font-size: 1.2em; margin-top: 8px; margin-left: 10px; }
+        h4 { font-size: 1.1em; margin-top: 4px; margin-left: 20px; }
+        p, li { font-size: 1.1em; line-height: 1.6; margin-left: 20px; }
+
+        .hidden { display: none; }
+        .section { margin-top: 10px; }
+
+        pre {
+            background: #f0f0f0;
+            padding: 15px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-x: auto;
+            border-radius: 6px;
+        }
+
+        .description { margin-left: 40px; }
+
+        .nested-section {
+            padding-left: 60px;
+            border-left: 3px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        button {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #95d5b2;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 6px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #c8eac2;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <p style="text-align: center; margin-top: 20px;">
+        <a href="index.html" style="font-size: 18px; text-decoration: none;">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </p>
+
+    <div class="header">
+        <img src="images/ASCENDION.png" alt="Ascendion Logo">
+        <img src="images/DMS.jpg" alt="DMS Logo">
+    </div>
+
+    <h1 id="file-name"></h1>
+
+    <div class="button-group">
+        <button onclick="showSection('analysis')">Analysis</button>
+        <button onclick="showSection('plan')">Plan</button>
+    </div>
+
+    <div id="analysis" class="section hidden">
+        <h2>Analysis</h2>
+        <pre id="analysis-content">Loading...</pre>
+    </div>
+
+    <div id="plan" class="section hidden">
+        <h2>Plan</h2>
+        <pre id="plan-content">Loading...</pre>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileName = decodeURIComponent(urlParams.get('file'));
+        document.getElementById('file-name').textContent = fileName;
+
+        function showSection(section) {
+            ['analysis', 'plan'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(section).classList.remove('hidden');
+        }
+
+        window.onload = () => {
+            showSection('analysis');
+        };
+
+        function renderNestedObject(obj) {
+            const container = document.createElement('div');
+
+            if (Array.isArray(obj)) {
+                const ul = document.createElement('ul');
+                obj.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    ul.appendChild(li);
+                });
+                container.appendChild(ul);
+            } else if (typeof obj === 'object') {
+                for (const [k, v] of Object.entries(obj)) {
+                    const subHeading = document.createElement('h4');
+                    subHeading.textContent = k;
+                    container.appendChild(subHeading);
+
+                    const descriptionContainer = document.createElement('div');
+                    descriptionContainer.classList.add('description');
+
+                    if (typeof v === 'string' || typeof v === 'number') {
+                        const para = document.createElement('p');
+                        para.textContent = v;
+                        descriptionContainer.appendChild(para);
+                    } else {
+                        const nestedDiv = document.createElement('div');
+                        nestedDiv.classList.add('nested-section');
+                        nestedDiv.appendChild(renderNestedObject(v));
+                        descriptionContainer.appendChild(nestedDiv);
+                    }
+
+                    container.appendChild(descriptionContainer);
+                }
+            }
+
+            return container;
+        }
+
+        function loadJsonContent(filePath, containerId) {
+            fetch(filePath)
+                .then(res => res.json())
+                .then(json => {
+                    const container = document.getElementById(containerId);
+                    container.innerHTML = '';
+
+                    for (const [key, value] of Object.entries(json)) {
+                        const sectionTitle = document.createElement('h3');
+                        sectionTitle.textContent = key;
+                        container.appendChild(sectionTitle);
+
+                        const descriptionContainer = document.createElement('div');
+                        descriptionContainer.classList.add('description');
+
+                        if (typeof value === 'string') {
+                            const para = document.createElement('p');
+                            para.textContent = value;
+                            descriptionContainer.appendChild(para);
+                        } else if (typeof value === 'object') {
+                            const nestedDiv = document.createElement('div');
+                            nestedDiv.classList.add('nested-section');
+                            nestedDiv.appendChild(renderNestedObject(value));
+                            descriptionContainer.appendChild(nestedDiv);
+                        }
+
+                        container.appendChild(descriptionContainer);
+                    }
+                })
+                .catch(() => {
+                    document.getElementById(containerId).textContent = 'No data available.';
+                });
+        }
+
+        loadJsonContent(`Analysis/${fileName}.json`, 'analysis-content');
+        loadJsonContent(`Plan/${fileName}.json`, 'plan-content');
+    </script>
+</body>
+</html>

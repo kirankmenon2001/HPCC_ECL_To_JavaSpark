@@ -1,0 +1,56 @@
+1. Cost Estimation
+1.1 Java Spark Runtime Cost
+Cluster Configuration:
+- Number of Executors: 10
+- Executor Memory: 16 GB
+- Driver Memory: 8 GB
+
+Approximate Data Volume Processed:
+- Total Input Data Volume: ~5.65 TB (sum of all datasets listed)
+- Active Data Processed: ~10–20% of total (~565 GB to 1.13 TB)
+
+Time Taken for Each Phase:
+- Shuffle-heavy JOINs: ~2 hours
+- Wide Transforms (PROJECTs): ~1 hour
+- Output Writes: ~1 hour
+
+Cost Model:
+- Using Databricks pricing at $0.25–$0.60 per DBU/hour:
+  - Estimated DBU Usage: ~50 DBUs/hour
+  - Total Runtime: ~4 hours
+  - Cost: 50 DBUs/hour * 4 hours * $0.40 (average cost per DBU) = $80.00
+
+Justification:
+- The cluster configuration is designed to handle large-scale distributed processing efficiently.
+- The cost is based on average DBU pricing and estimated runtime for the operations.
+
+2. Code Fixing and Data Recon Testing Effort Estimation
+2.1 Estimated Effort in Hours
+Manual Intervention and Solutions of Complex Constructs:
+- TRANSFORMs to UDFs: 10 hours
+- RECORD Structures to Case Classes: 15 hours
+- JOIN Logic Refactoring: 20 hours
+- OUTPUT Statements Refactoring: 10 hours
+
+Data Recon and Pipeline Testing:
+- Test Case Creation: 10 hours
+- Validation of Intermediate Datasets: 15 hours
+- Output Comparison: 10 hours
+
+Syntax Differences:
+- Adjustments for syntax differences: 5 hours
+
+Optimization Techniques:
+- Partitioning and Caching: 10 hours
+- Broadcast Joins vs Shuffle Joins: 5 hours
+
+Total Estimated Effort: 100 hours
+
+Major Contributors:
+- Rewriting nested TRANSFORMs and rollups: High complexity due to manual refactoring.
+- Refactoring OUTPUT statements for Spark write APIs: Moderate complexity.
+- Managing schema consistency across distributed stages: High complexity.
+
+3. API Cost
+apiCost: 0.013452 USD
+```

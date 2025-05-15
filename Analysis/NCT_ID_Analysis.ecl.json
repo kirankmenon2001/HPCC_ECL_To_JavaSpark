@@ -1,0 +1,122 @@
+{
+    "NCT_ID_Analysis.ecl": {
+    "1. Script Overview": {
+    "Summary": "This ECL script processes clinical trial data by extracting and analyzing NCT IDs from various datasets. It integrates multiple datasets from the AACT library to provide insights into data coverage, cardinality, and missing records. The script is crucial for ensuring data traceability and completeness in clinical trial reporting systems.",
+    "Functional Modules": [
+    "DATASET declarations for empty and extracted results.",
+    "TRANSFORM logic for NCT ID extraction and aggregation.",
+    "PROJECT operations for dataset transformation.",
+    "JOIN operations for merging datasets.",
+    "TABLE constructs for summarization.",
+    "OUTPUT statements for result generation."
+    ],
+    "Data Pipelines Overview": "The script begins by extracting NCT IDs from various datasets using the `Extract_ID` macro. These datasets are then combined into a single dataset (`raw_ds`) and filtered to exclude records with empty NCT IDs (`all_ds`). Aggregations and transformations are performed to analyze data coverage, cardinality, and missing records. Outputs are generated to summarize findings and provide insights into data completeness and distribution."
+    },
+    "2. Complexity Metrics": {
+    "Total Lines of Code": 150,
+    "Dataset Count": 42,
+    "Transform Count and Types": [
+    {
+    "Type": "TRANSFORM",
+    "Count": 2
+    }
+    ],
+    "Join Analysis": {
+    "Join Count": 4,
+    "Join Types": [
+    "LOOKUP",
+    "LEFT"
+    ]
+    },
+    "Project, Sort, Dedup, Rollup Counts": {
+    "Project Count": 1,
+    "Sort Count": 7,
+    "Dedup Count": 0,
+    "Rollup Count": 0
+    },
+    "Child Workflows or Module Calls": 1,
+    "Output or Store Operations": 15,
+    "Conditional Logic Count": 2,
+    "Macro or Function Module Reuse": 1,
+    "Conversion Complexity Score": {
+    "Score (0–100)": 85,
+    "Reasoning": [
+    "High number of datasets and joins.",
+    "Complex aggregation and transformation logic.",
+    "Multiple OUTPUT statements requiring manual refactoring."
+    ]
+    }
+    },
+    "3. Feature Compatibility Check": {
+    "Incompatible Features": [
+    "Implicit schema typing.",
+    "RECORD structures.",
+    "Global aggregates with GROUP."
+    ],
+    "Examples of Challenging Constructs": [
+    "Complex RECORD structures.",
+    "Dataset transformations like PROJECT and TABLE.",
+    "Global aggregates with GROUP."
+    ]
+    },
+    "4. Manual Adjustments for Java Spark Migration": {
+    "Transform Refactoring": "Refactor TRANSFORMs into Spark UDFs using DataFrame transformations.",
+    "Schema Redefinition": "Convert RECORD structures into case classes or schema objects in Spark.",
+    "Join Handling Strategy": "Rewrite JOINs using Spark DataFrame join operations with appropriate conditions.",
+    "Complex Ops Handling": "Use Spark equivalents for NORMALIZE, ROLLUP, and DEDUP operations, such as groupBy and aggregate functions.",
+    "Output Refactoring": "Rewrite OUTPUT targets to HDFS, Parquet, or other Spark-supported sinks."
+    },
+    "5. Optimization Techniques in Spark": {
+    "Join Optimization": "Use broadcast joins for small datasets and shuffle joins for large datasets.",
+    "Partitioning Strategy": "Partition datasets based on key fields to optimize data distribution.",
+    "Caching Strategy": "Cache intermediate results to reduce recomputation.",
+    "Code Optimization Techniques": "Leverage Catalyst optimizer hints and DataFrame API improvements.",
+    "Refactor vs Rebuild Recommendation": {
+    "Approach": "Rebuild logic.",
+    "Justification": "The script's reliance on ECL-specific constructs like RECORD and TRANSFORM makes refactoring challenging. Rebuilding ensures better alignment with Spark's capabilities and optimizations."
+    }
+    },
+    "6. Cost Estimation": {
+    "Java Spark Runtime Cost": {
+    "Cluster Configuration": {
+    "Number of Executors": 10,
+    "Executor Memory": "16 GB",
+    "Driver Memory": "8 GB"
+    },
+    "Approximate Data Volume Processed": {
+    "Input Data": "50–100 GB",
+    "Output Data": "10–15 GB"
+    },
+    "Time Taken for Each Phase": {
+    "Shuffle-heavy Joins": "2 hours",
+    "Wide Transforms": "3 hours",
+    "Output Writes": "1 hour"
+    },
+    "Cost Model": {
+    "Pricing Basis": "Cloud provider pricing details (e.g., DBU cost per hour)",
+    "Total Estimated Cost": "Example calculation showing cost formula"
+    },
+    "Justification": [
+    "The chosen configuration balances memory and compute requirements for large-scale data processing.",
+    "Pricing estimates are based on typical cloud provider costs for Spark clusters."
+    ]
+    }
+    },
+    "7. Code Fixing and Data Recon Testing Effort Estimation": {
+    "Estimated Effort in Hours": {
+    "Manual Refactoring": 40,
+    "Data Reconciliation Testing": 20,
+    "Syntax Translation Adjustments": 15,
+    "Optimization and Performance Tuning": 25
+    },
+    "Major Contributors to Effort": {
+    "Nested TRANSFORM Refactoring": 15,
+    "Output Refactoring for Spark Writes": 10,
+    "Schema Management Effort": 10
+    }
+    },
+    "8. API Cost": {
+    "apiCost": "0.013452 USD"
+    }
+    }
+    }

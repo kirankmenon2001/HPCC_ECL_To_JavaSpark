@@ -1,0 +1,76 @@
+---
+
+#### 1. Cost Estimation
+
+##### 1.1 Java Spark Runtime Cost
+
+**Cluster Configuration:**
+- Number of Executors: 10
+- Executor Memory: 16 GB
+- Driver Memory: 8 GB
+
+**Approximate Data Volume Processed:**
+- Total Input Data Volume: ~3 TB (based on the environment file)
+- Estimated Data Processed: ~10–15% of input (~300–450 GB)
+
+**Time Taken for Each Phase:**
+- Shuffle-heavy Operations (e.g., COUNT, GROUP): ~2 hours
+- Wide Transformations (e.g., TABLE, TOPN): ~1 hour
+- Output Writes: ~1 hour
+
+**Cost Model:**
+- Provider: Databricks on AWS
+- Cost per DBU: $0.25–$0.60 per hour
+- Estimated DBU Consumption: ~50 DBUs per hour
+
+**Total Runtime Cost:**
+- Total Hours: ~4 hours
+- Total DBUs: ~200 DBUs
+- Estimated Cost: $50–$120 USD
+
+**Justification:**
+- Shuffle-heavy operations and wide transformations dominate the runtime due to the large data volume (~300–450 GB actively processed).
+- Output writes are relatively lightweight but still contribute to runtime due to multiple named outputs.
+
+---
+
+#### 2. Code Fixing and Data Recon Testing Effort Estimation
+
+##### 2.1 Estimated Effort in Hours
+
+**Manual Intervention and Solutions of Complex Constructs:**
+- Refactoring OUTPUT statements for Spark write APIs: ~10 hours
+- Managing schema consistency across distributed stages: ~5 hours
+
+**Data Recon and Pipeline Testing:**
+- Test case creation: ~8 hours
+- Validation of intermediate datasets: ~12 hours
+- Output comparison: ~10 hours
+
+**Syntax Differences:**
+- Explicit schema definitions for datasets: ~6 hours
+
+**Optimization Techniques:**
+- Partitioning datasets for performance: ~4 hours
+- Caching intermediate results: ~3 hours
+
+**Total Effort:**
+- Estimated Hours: ~58 hours
+
+**Major Contributors:**
+- Extensive OUTPUT operations requiring refactoring.
+- Schema consistency management across distributed stages.
+- Validation of intermediate datasets and output comparison.
+
+---
+
+#### 3. API Cost
+
+**API Cost:**
+- Cost Consumed: 0.013452 USD
+
+---
+
+This concludes the comprehensive effort and cost estimation for executing and testing Java Spark code converted from ECL scripts.
+
+Save Output

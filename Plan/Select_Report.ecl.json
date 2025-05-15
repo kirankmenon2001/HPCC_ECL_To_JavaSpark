@@ -1,0 +1,44 @@
+{
+    "1. Cost Estimation": {
+      "1.1 Java Spark Runtime Cost": {
+        "Cluster Configuration": {
+          "Number of Executors": 4,
+          "Executor Memory": "16 GB",
+          "Driver Memory": "8 GB"
+        },
+        "Approximate Data Volume Processed": {
+          "Input Data": "50–100 GB",
+          "Output Data": "10–15 GB"
+        },
+        "Time Taken for Each Phase": {
+          "Shuffle-heavy JOINs": "Not applicable.",
+          "Wide Transforms (e.g., ROLLUP, DENORMALIZE)": "3 hours.",
+          "Output Writes": "1 hour."
+        },
+        "Cost Model": {
+          "Pricing Model (e.g., DBU, vCPU Hour)": "AWS EMR pricing at $0.11 per vCPU-hour.",
+          "Total Runtime Cost": "$50–100 based on runtime and cluster configuration."
+        },
+        "Justification": [
+          "Cluster configuration ensures sufficient memory and compute resources for SORT-heavy operations.",
+          "Pricing estimates are based on typical cloud provider costs for Spark workloads."
+        ]
+      }
+    },
+    "2. Code Fixing and Data Recon Testing Effort Estimation": {
+      "2.1 Estimated Effort in Hours": {
+        "Manual intervention and solutions of complex constructs during ECL to Spark translation": 20,
+        "Data recon and pipeline testing, including test case creation, validation of intermediate datasets, and output comparison": 15,
+        "Syntax Differences": 10,
+        "Optimization Techniques": 10
+      },
+      "Major Contributors": {
+        "Rewriting nested TRANSFORMs or rollups": 0,
+        "Refactoring OUTPUT statements for Spark write APIs": 10,
+        "Managing schema consistency across distributed stages": 10
+      }
+    },
+    "3. API Cost": {
+      "apiCost": 0.013452
+    }
+  }

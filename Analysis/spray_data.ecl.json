@@ -1,0 +1,115 @@
+{
+    "1. Script Overview": {
+    "Summary": "The ECL script automates the process of spraying datasets from a remote directory into the HPCC Systems environment. It addresses the business problem of managing large-scale clinical trial data ingestion and ensures traceability and consistency in data processing.",
+    "Functional Modules": [
+    "Directory Listing: Uses STD.File.RemoteDirectory to list files in a remote directory.",
+    "File Name Transformation: A TRANSFORM function trims the last 4 characters from file names.",
+    "Data Spraying: Uses STD.File.SprayVariable to spray datasets into the HPCC Systems environment.",
+    "Output Generation: Outputs the list of sprayed files using OUTPUT."
+    ],
+    "Data Pipelines Overview": "The script orchestrates a linear data flow starting with directory listing, followed by file name transformation, data spraying, and output generation. It ensures efficient ingestion and preparation of clinical trial datasets for downstream analytics workflows."
+    },
+    "2. Complexity Metrics": {
+    "Total Lines of Code": 26,
+    "Dataset Count": 2,
+    "Transform Count and Types": [
+    {
+    "Type": "TRANSFORM",
+    "Count": 1
+    }
+    ],
+    "Join Analysis": {
+    "Join Count": 0,
+    "Join Types": []
+    },
+    "Project, Sort, Dedup, Rollup Counts": {
+    "Project Count": 1,
+    "Sort Count": 0,
+    "Dedup Count": 0,
+    "Rollup Count": 0
+    },
+    "Child Workflows or Module Calls": 1,
+    "Output or Store Operations": 1,
+    "Conditional Logic Count": 0,
+    "Macro or Function Module Reuse": 1,
+    "Conversion Complexity Score": {
+    "Score (0–100)": 35,
+    "Reasoning": [
+    "Linear workflow with minimal nesting.",
+    "No complex joins or conditional logic.",
+    "Hardcoded paths and IPs require parameterization."
+    ]
+    }
+    },
+    "3. Feature Compatibility Check": {
+    "Incompatible Features": [
+    "Implicit schema typing in RECORDOF.",
+    "Hardcoded paths and IPs."
+    ],
+    "Examples of Challenging Constructs": [
+    "RECORDOF structure for dirList.",
+    "TRANSFORM logic for file name trimming."
+    ]
+    },
+    "4. Manual Adjustments for Java Spark Migration": {
+    "Transform Refactoring": "Refactor TRANSFORM logic into a Spark UDF to handle file name trimming.",
+    "Schema Redefinition": "Convert RECORD structures into Spark DataFrame schemas or case classes.",
+    "Join Handling Strategy": "No joins are present in the script.",
+    "Complex Ops Handling": "Rewrite PROJECT operation using Spark DataFrame transformations.",
+    "Output Refactoring": "Replace OUTPUT with Spark write operations to HDFS or Parquet."
+    },
+    "5. Optimization Techniques in Spark": {
+    "Join Optimization": "Not applicable as no joins are present.",
+    "Partitioning Strategy": "Partition datasets based on file name prefixes to optimize spraying.",
+    "Caching Strategy": "Cache intermediate results if reused in subsequent operations.",
+    "Code Optimization Techniques": "Use Catalyst optimizer hints for efficient transformations.",
+    "Refactor vs Rebuild Recommendation": {
+    "Approach": "Refactor with minimal changes.",
+    "Justification": "The script follows a linear workflow with minimal complexity, making it suitable for direct refactoring."
+    }
+    },
+    "6. Cost Estimation": {
+    "Java Spark Runtime Cost": {
+    "Cluster Configuration": {
+    "Number of Executors": 4,
+    "Executor Memory": "8 GB",
+    "Driver Memory": "4 GB"
+    },
+    "Approximate Data Volume Processed": {
+    "Input Data": "10–50 GB",
+    "Output Data": "10–50 GB"
+    },
+    "Time Taken for Each Phase": {
+    "Shuffle-heavy Joins": "Not applicable",
+    "Wide Transforms": "30 minutes",
+    "Output Writes": "15 minutes"
+    },
+    "Cost Model": {
+    "Pricing Basis": "Based on cloud provider pricing of $0.10 per executor-hour.",
+    "Total Estimated Cost": "$2.50"
+    },
+    "Justification": [
+    "Linear workflow with minimal data transformations.",
+    "Small to medium data volume."
+    ]
+    }
+    },
+    "7. Code Fixing and Data Recon Testing Effort Estimation": {
+    "Estimated Effort in Hours": {
+    "Manual Refactoring": 4,
+    "Data Reconciliation Testing": 2,
+    "Syntax Translation Adjustments": 1,
+    "Optimization and Performance Tuning": 2
+    },
+    "Major Contributors to Effort": {
+    "Nested TRANSFORM Refactoring": 2,
+    "Output Refactoring for Spark Writes": 1,
+    "Schema Management Effort": 1
+    }
+    },
+    "8. API Cost": {
+    "apiCost": "0.013452 USD"
+    }
+    }
+    
+    

@@ -1,0 +1,45 @@
+{
+    "1. Cost Estimation": {
+      "1.1 Java Spark Runtime Cost": {
+        "Cluster Configuration": {
+          "Number of Executors": 4,
+          "Executor Memory": "8 GB",
+          "Driver Memory": "4 GB"
+        },
+        "Approximate Data Volume Processed": {
+          "Input Data": "500 MB - 2 GB per file, approximately 20-30 files",
+          "Output Data": "500 MB - 2 GB per file, approximately 20-30 files"
+        },
+        "Time Taken for Each Phase": {
+          "Shuffle-heavy JOINs": "Not applicable",
+          "Wide Transforms (e.g., ROLLUP, DENORMALIZE)": "30 minutes",
+          "Output Writes": "15 minutes"
+        },
+        "Cost Model": {
+          "Pricing Model (e.g., DBU, vCPU Hour)": "Databricks DBU cost: $0.25 - $0.60 per hour",
+          "Total Runtime Cost": "$2.50"
+        },
+        "Justification": [
+          "Linear workflow with minimal data transformations.",
+          "Small to medium data volume.",
+          "Efficient partitioning and spraying process."
+        ]
+      }
+    },
+    "2. Code Fixing and Data Recon Testing Effort Estimation": {
+      "2.1 Estimated Effort in Hours": {
+        "Manual intervention and solutions of complex constructs during ECL to Spark translation": 4,
+        "Data recon and pipeline testing, including test case creation, validation of intermediate datasets, and output comparison": 2,
+        "Syntax Differences": 1,
+        "Optimization Techniques": 2
+      },
+      "Major Contributors": {
+        "Rewriting nested TRANSFORMs or rollups": 2,
+        "Refactoring OUTPUT statements for Spark write APIs": 1,
+        "Managing schema consistency across distributed stages": 1
+      }
+    },
+    "3. API Cost": {
+      "apiCost": 0.013452
+    }
+  }

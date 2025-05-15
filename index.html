@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Design Pattern Analysis and Optimization Recommendations</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+   
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #333;
+    }
+    .logo-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .logo-container img {
+      height: 60px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    .section {
+      flex: 1;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+    ul, ol {
+      list-style-type: decimal;
+      padding-left: 20px;
+    }
+    a {
+      text-decoration: none;
+      color: #1a73e8;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1558b0;
+    }
+    h2, h3 {
+      text-align: center;
+      color: #444;
+    }
+   
+    .graph-container {
+      width: 95%;
+      height: 600px;
+      margin: 30px auto;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      background-color: #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .graph-title {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      background: white;
+      padding: 5px 12px;
+      z-index: 10;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+    .label {
+      font-size: 12px;
+      pointer-events: none;
+      fill: #333;
+    }
+    .toggle-btn {
+      padding: 10px 20px;
+      margin: 0 10px;
+      background-color: #95d5b2;
+      color: #000;
+      border: 1px solid #74c69d;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .toggle-btn:hover {
+      background-color: #74c69d;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+    }
+    .graph-btn {
+      padding: 8px 16px;
+      margin: 10px 5px;
+      background-color: #b7e4c7;
+      color: #000;
+      border: 1px solid #74c69d;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .graph-btn:hover, .graph-btn.active {
+      background-color: #52b788;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    .graph-container {
+      display: none;
+    }
+    .graph-container.active {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="images/ASCENDION.png" alt="Ascendion Logo">
+    <img src="images/DMS.jpg" alt="DMS Logo">
+  </div>
+ 
+  <h1>Design Pattern Analysis and Optimization Recommendations</h1>
+ 
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="toggle-btn" onclick="showSection('design-pattern')">Design Pattern</button>
+    <button class="toggle-btn" onclick="showSection('documentation-dependency')">Documentation and Dependency</button>
+    <button class="toggle-btn" onclick="showSection('dependency-graphs')">Dependency Graphs</button>
+    <button class="toggle-btn" onclick="showSection('analysis-plan')">JavaSpark</button>
+  </div>
+ 
+  <div id="design-pattern" class="section">
+    <h2>Design Pattern</h2>
+    <h3><a href="patterns.html">List of Design Patterns</a></h3>
+    <input type="text" id="pattern-search" placeholder="Search pattern..." style="margin-bottom: 15px; padding: 8px; width: 100%; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
+    <ol id="pattern-list"></ol>
+  </div>
+ 
+  <div id="documentation-dependency" class="section">
+    <h2>Documentation and Dependency</h2>
+    <h3>List of Files</h3>
+    <input type="text" id="doc-search" placeholder="Search file..." style="margin-bottom: 15px; padding: 8px; width: 100%; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
+    <ol id="doc-file-list"></ol>
+  </div>
+ 
+  <div id="analysis-plan" class="section">
+    <h2>Analysis and Plan</h2>
+    <h3>List of Files</h3>
+    <input type="text" id="analysis-search" placeholder="Search file..." style="margin-bottom: 15px; padding: 8px; width: 100%; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
+    <ol id="analysis-file-list"></ol>
+  </div>
+  <div id="tooltip" style="position: absolute; opacity: 0;"></div>
+ 
+  <div id="dependency-graphs" class="section">
+    <h2>Dependency Graph Visualizations</h2>
+    <div style="text-align: center; margin: 20px 0;">
+      <button class="graph-btn" onclick="showGraph('dependency-graph-1')">Dependency Graph 1</button>
+      <button class="graph-btn" onclick="showGraph('dependency-graph-2')">Dependency Graph 2</button>
+      <button class="graph-btn" onclick="showGraph('radial-dependency')">Radial Dependency Chart</button>
+      <button class="graph-btn" onclick="showGraph('circle-packing')">Circle Packing Dependency</button>
+      <button class="graph-btn" onclick="showGraph('treemap-dependency')">Treemap of Dependencies</button>
+      <button class="graph-btn" onclick="showGraph('root-dependency')">Root Files Graph</button>
+ 
+    </div>
+ 
+    <!-- Graph containers -->
+    <div id="graphs-wrapper"></div>
+ 
+    <!-- Radial Graph Container -->
+    <div id="radial-dependency" class="graph-container">
+      <div class="graph-title">Radial Dependency Chart</div>
+      <svg id="radial"></svg>
+    </div>
+ 
+    <!-- Circle Packing Container -->
+    <div id="circle-packing" class="graph-container">
+      <div class="graph-title">Circle Packing Dependency</div>
+      <svg id="circlepacking"></svg>
+    </div>
+ 
+   
+    <div id="root-dependency" class="graph-container">
+      <div class="graph-title">Root Dependency Files</div>
+      <svg id="root-graph"></svg>
+    </div>
+ 
+   
+    <!-- Treemap Container -->
+    <div id="treemap-dependency" class="graph-container">
+      <div class="graph-title">Treemap of Dependencies</div>
+      <svg id="treemap"></svg>
+      <div id="treemap-legend" style="margin: 20px; font-family: 'Times New Roman', Times, serif;">
+      <h3>Legend: Root File Colors</h3>
+      <ul style="list-style-type: none; padding: 0;" id="legend-list"></ul>
+    </div>
+  </div>
+ 
+  <script>
+    // Function to show selected section
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById(sectionId).style.display = 'block';
+    }
+ 
+    // Function to show selected graph
+    function showGraph(graphId) {
+      document.querySelectorAll('.graph-container').forEach(graph => {
+        graph.classList.remove('active');
+      });
+      document.querySelectorAll('.graph-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+     
+      document.getElementById(graphId).classList.add('active');
+     
+      // Find and activate the button that corresponds to this graph
+      const buttons = document.querySelectorAll('.graph-btn');
+      for (let btn of buttons) {
+        if (btn.onclick.toString().includes(graphId)) {
+          btn.classList.add('active');
+        }
+      }
+    }
+ 
+    const width = 800, height = 600;
+   
+    function toggleAllGraphs() {
+      const graphSection = document.getElementById('all-graphs');
+      const isHidden = graphSection.style.display === 'none';
+      graphSection.style.display = isHidden ? 'flex' : 'none';
+    }
+ 
+    fetch('Design_Pattern.json')
+      .then(response => response.json())
+      .then(data => {
+        const patternList = document.getElementById('pattern-list');
+        data.pattern_summary.forEach(pattern => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `pattern-detail.html?pattern=${encodeURIComponent(pattern.pattern)}`;
+          a.textContent = pattern.pattern;
+          li.appendChild(a);
+          patternList.appendChild(li);
+        });
+      });
+ 
+    document.getElementById('pattern-search').addEventListener('input', function () {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll('#pattern-list li').forEach(li => {
+        li.style.display = li.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      });
+    });
+ 
+    function buildTree(data) {
+      const nodes = {};
+      const childrenSet = new Set();
+      Object.keys(data).forEach(name => nodes[name] = { name, children: [] });
+      for (const [parent, children] of Object.entries(data)) {
+        children.forEach(child => {
+          if (nodes[child]) {
+            nodes[parent].children.push(nodes[child]);
+            childrenSet.add(child);
+          }
+        });
+      }
+      const roots = Object.keys(data).filter(k => !childrenSet.has(k));
+      return nodes[roots[0]]; // return the first root
+    }
+ 
+    fetch('dependency.json')
+      .then(response => response.json())
+      .then(data => {
+       
+        const docList = document.getElementById('doc-file-list');
+        const analysisList = document.getElementById('analysis-file-list');
+        Object.keys(data).forEach(filename => {
+          ['file-detail.html', 'file-detail2.html'].forEach((link, i) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `${link}?file=${encodeURIComponent(filename)}`;
+            a.textContent = filename;
+            li.appendChild(a);
+            (i === 0 ? docList : analysisList).appendChild(li.cloneNode(true));
+          });
+        });
+ 
+        // Force Graphs
+        const rootNodes = new Set(Object.keys(data));
+        const graphGroups = getDisconnectedSubgraphs(data);
+        const wrapper = document.getElementById('graphs-wrapper');
+ 
+        graphGroups.forEach((group, index) => {
+          const container = document.createElement("div");
+          container.className = "graph-container";
+          container.id = `dependency-graph-${index + 1}`;
+          container.innerHTML = `<div class="graph-title">Dependency Graph ${index + 1}</div>`;
+          wrapper.appendChild(container);
+ 
+          const svg = d3.select(container).append("svg");
+          const g = svg.append("g");
+ 
+          const nodesMap = {};
+          const links = [];
+ 
+          group.forEach(([source, target]) => {
+            if (!nodesMap[source]) nodesMap[source] = { id: source };
+            if (!nodesMap[target]) nodesMap[target] = { id: target };
+            links.push({ source, target });
+          });
+ 
+          const nodes = Object.values(nodesMap);
+          const width = container.clientWidth;
+          const height = container.clientHeight;
+ 
+          const zoom = d3.zoom().scaleExtent([0.2, 4]).on("zoom", event => g.attr("transform", event.transform));
+          svg.call(zoom);
+ 
+          const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(120))
+            .force("charge", d3.forceManyBody().strength(-200))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+ 
+          const link = g.append("g").attr("stroke", "#aaa").attr("stroke-opacity", 0.6)
+            .selectAll("line").data(links).join("line").attr("stroke-width", 1);
+ 
+          const node = g.append("g").selectAll("circle").data(nodes).join("circle")
+            .attr("r", 8)
+            .attr("fill", d => rootNodes.has(d.id) ? "#1f77b4" : "#ff7f0e")
+            .call(d3.drag()
+              .on("start", (event, d) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+              .on("drag", (event, d) => { d.fx = event.x; d.fy = event.y; })
+              .on("end", (event, d) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+            );
+ 
+          const label = g.append("g").selectAll("text").data(nodes).join("text")
+            .attr("class", "label").text(d => d.id);
+ 
+          simulation.on("tick", () => {
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            node.attr("cx", d => d.x).attr("cy", d => d.y);
+            label.attr("x", d => d.x + 10).attr("y", d => d.y + 4);
+          });
+        });
+ 
+           
+            const radialRoot = d3.hierarchy(buildTree(data));
+            const radius = Math.min(width, height) / 2;
+            const radialLayout = d3.cluster().size([2 * Math.PI, radius - 100]);
+            radialLayout(radialRoot);
+ 
+            const radialSvg = d3.select("#radial")
+                .attr("viewBox", [-width / 2, -height / 2, width, height]);
+ 
+            const rline = d3.lineRadial()
+                .angle(d => d.x)
+                .radius(d => d.y);
+ 
+            radialSvg.append("g")
+                .selectAll("path")
+                .data(radialRoot.links())
+                .join("path")
+                .attr("d", d => rline([d.source, d.target]))
+                .attr("fill", "none")
+                .attr("stroke", "#ccc");
+ 
+            radialSvg.append("g")
+                .selectAll("circle")
+                .data(radialRoot.descendants())
+                .join("circle")
+                .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`)
+                .attr("r", 3)
+                .attr("fill", "#69b3a2");
+ 
+            radialSvg.append("g")
+                .selectAll("text")
+                .data(radialRoot.descendants())
+                .join("text")
+                .attr("transform", d => `
+                    rotate(${d.x * 180 / Math.PI - 90})
+                    translate(${d.y},0)
+                    rotate(${d.x >= Math.PI ? 180 : 0})
+                `)
+                .attr("dy", "0.31em")
+                .attr("x", d => d.x < Math.PI ? 6 : -6)
+                .style("text-anchor", d => d.x < Math.PI ? "start" : "end")
+                .text(d => d.data.name);
+                fetch('dependency.json')
+  .then(res => res.json())
+  .then(data => {
+    const width = 600, height = 600;
+ 
+    const root = d3.hierarchy(buildTree(data))
+      .sum(() => 1)
+      .sort((a, b) => b.value - a.value);
+ 
+    const pack = d3.pack().size([width, height]).padding(5);
+    pack(root);
+ 
+    const color = d3.scaleOrdinal(d3.schemeTableau10);
+ 
+    const svg = d3.select("#circlepacking")
+      .attr("viewBox", [0, 0, width, height])
+      .style("font", "12px sans-serif");
+ 
+    const tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("background", "#222")
+      .style("color", "#fff")
+      .style("padding", "6px 10px")
+      .style("border-radius", "4px")
+      .style("pointer-events", "none")
+      .style("font-size", "12px")
+      .style("opacity", 0);
+ 
+    const g = svg.append("g");
+ 
+    const node = g.selectAll("circle")
+      .data(root.descendants())
+      .join("circle")
+      .attr("transform", d => `translate(${d.x},${d.y})`)
+      .attr("r", d => d.r)
+      .attr("fill", d => color(d.depth))
+      .attr("stroke", "#333")
+      .attr("stroke-width", 1)
+      .on("mouseover", (event, d) => {
+        tooltip.style("opacity", 1).html(`<strong>${d.data.name}</strong>`);
+      })
+      .on("mousemove", event => {
+        tooltip.style("left", (event.pageX + 10) + "px")
+               .style("top", (event.pageY - 20) + "px");
+      })
+      .on("mouseout", () => tooltip.style("opacity", 0))
+      .on("click", (event, d) => zoom(d));
+ 
+    const labels = g.selectAll("text")
+      .data(root.descendants())
+      .join("text")
+      .attr("transform", d => `translate(${d.x},${d.y})`)
+      .attr("text-anchor", "middle")
+      .attr("dy", ".35em")
+      .attr("pointer-events", "none")
+      .style("fill", "#fff")
+      .style("font-size", d => d.r / 3)
+      .text(d => d.children ? "" : d.data.name);
+ 
+    let focus = root;
+ 
+    function zoom(d) {
+      const transition = svg.transition()
+        .duration(750)
+        .tween("zoom", () => {
+          const i = d3.interpolateZoom([focus.x, focus.y, focus.r * 2], [d.x, d.y, d.r * 2]);
+          return t => zoomTo(i(t));
+        });
+      focus = d;
+    }
+ 
+    function zoomTo(v) {
+      const k = width / v[2];
+      g.attr("transform", `translate(${width / 2 - v[0] * k},${height / 2 - v[1] * k}) scale(${k})`);
+    }
+ 
+    zoomTo([root.x, root.y, root.r * 2]);
+  });
+  function createRootNodesGraph(data) {
+  const roots = Object.keys(data).filter(file =>
+    !Object.values(data).flat().includes(file)
+  );
+  const width = 400;
+  const height = roots.length * 80 + 40; // height based on number of nodes (80px spacing)
+ 
+  // Set SVG size dynamically based on number of nodes
+  const svg = d3.select("#root-graph")
+    .attr("viewBox", [0, 0, width, height])
+    .style("font", "14px Times")
+    .call(
+      d3.zoom()
+        .scaleExtent([0.5, 5])
+        .on("zoom", (event) => {
+          g.attr("transform", event.transform);
+        })
+    );
+ 
+  const g = svg.append("g");
+ 
+  // Create nodes data with y positions spaced vertically
+  const nodes = roots.map((root, i) => ({
+    id: root,
+    x: width / 2,
+    y: 40 + i * 80
+  }));
+ 
+  // Add circles (big circles)
+  const node = g.selectAll("circle")
+    .data(nodes)
+    .join("circle")
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", 30)  // bigger radius
+    .attr("fill", "#4cc9f0")
+    .attr("stroke", "#1d3557")
+    .attr("stroke-width", 2)
+    .style("cursor", "pointer")
+    .on("click", (event, d) => {
+      showSection('documentation-dependency');
+      const fileLinks = document.querySelectorAll('#doc-file-list li a');
+      fileLinks.forEach(link => {
+        if (link.textContent.trim() === d.id) {
+          link.scrollIntoView({ behavior: "smooth", block: "center" });
+          link.style.backgroundColor = "#ffe066";
+          setTimeout(() => link.style.backgroundColor = "", 2000);
+        }
+      });
+    })
+    .on("mouseover", function () {
+      d3.select(this).attr("fill", "#3a86ff");
+    })
+    .on("mouseout", function () {
+      d3.select(this).attr("fill", "#4cc9f0");
+    });
+ 
+  // Add labels centered horizontally, vertically aligned to circles
+  const label = g.selectAll("text")
+    .data(nodes)
+    .join("text")
+    .attr("x", d => d.x)
+    .attr("y", d => d.y + 5) // adjust vertical alignment
+    .attr("text-anchor", "middle")
+    .attr("font-weight", "bold")
+    .attr("fill", "#1d3557")
+    .style("user-select", "none")
+    .text(d => d.id);
+}
+ 
+ 
+  fetch('dependency.json')
+  .then(res => res.json())
+  .then(data => {
+   
+    const width = 400, height = 300;
+ 
+    const root = d3.hierarchy(buildTree(data))
+      .sum(() => 1)
+      .sort((a, b) => b.value - a.value);
+ 
+    d3.treemap()
+      .size([width, height])
+      .padding(2)(root);
+ 
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+ 
+    const svg = d3.select("#treemap")
+      .attr("viewBox", [0, 0, width, height])
+      .style("font", "11px sans-serif");
+ 
+    const node = svg.selectAll("g")
+      .data(root.leaves())
+      .join("g")
+      .attr("transform", d => `translate(${d.x0},${d.y0})`);
+ 
+    node.append("rect")
+      .attr("id", d => d.data.name)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("fill", d => color(d.parent.data.name))
+      .attr("stroke", "#fff")
+      .on("mouseover", function () {
+        d3.select(this).attr("fill", "orange");
+      })
+      .on("mouseout", function (event, d) {
+        d3.select(this).attr("fill", color(d.parent.data.name));
+      });
+ 
+    node.append("title")
+      .text(d => `${d.data.name}\n${d.value}`);
+ 
+    node.append("text")
+      .attr("x", 3)
+      .attr("y", 13)
+      .text(d => d.data.name)
+      .attr("fill", "white")
+      .style("font-size", "10px")
+      .style("pointer-events", "none");
+ 
+    // === Generate Legend for Root Files ===
+    const legendContainer = document.getElementById('legend-list');
+    const seen = new Set();
+ 
+    root.leaves().forEach(d => {
+      const rootName = d.parent.data.name;
+      if (!seen.has(rootName)) {
+        seen.add(rootName);
+ 
+        const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.alignItems = 'center';
+        li.style.marginBottom = '6px';
+ 
+        const colorBox = document.createElement('span');
+        colorBox.style.display = 'inline-block';
+        colorBox.style.width = '16px';
+        colorBox.style.height = '16px';
+        colorBox.style.marginRight = '10px';
+        colorBox.style.backgroundColor = color(rootName);
+        colorBox.style.border = '1px solid #333';
+        colorBox.style.borderRadius = '4px';
+ 
+        const label = document.createElement('span');
+        label.textContent = rootName;
+ 
+        li.appendChild(colorBox);
+        li.appendChild(label);
+        legendContainer.appendChild(li);
+      }
+    });
+    createRootNodesGraph(data);
+ 
+  });
+ 
+    // ============== Helper to build hierarchy ==============
+            function buildTree(flat) {
+                const map = {}, root = { name: "root", children: [] };
+                for (const [src, targets] of Object.entries(flat)) {
+                    if (!map[src]) map[src] = { name: src, children: [] };
+                    targets.forEach(tgt => {
+                        if (!map[tgt]) map[tgt] = { name: tgt, children: [] };
+                        map[src].children.push(map[tgt]);
+                    });
+                }
+                Object.values(map).forEach(node => {
+                    if (!Object.values(flat).flat().includes(node.name)) {
+                        root.children.push(node);
+                    }
+                });
+                return root;
+            }
+        });
+       
+    function getDisconnectedSubgraphs(data) {
+      const graph = {}, edges = [];
+      for (const [src, targets] of Object.entries(data)) {
+        if (!graph[src]) graph[src] = new Set();
+        targets.forEach(tgt => {
+          if (!graph[tgt]) graph[tgt] = new Set();
+          graph[src].add(tgt);
+          graph[tgt].add(src);
+          edges.push([src, tgt]);
+        });
+      }
+      const visited = new Set(), subgraphs = [];
+      function dfs(node, groupEdges) {
+        visited.add(node);
+        graph[node].forEach(neighbor => {
+          const pair = [node, neighbor];
+          const reverse = [neighbor, node];
+          if (!groupEdges.some(e => (e[0] === pair[0] && e[1] === pair[1]) || (e[0] === reverse[0] && e[1] === reverse[1]))) {
+            groupEdges.push(pair);
+          }
+          if (!visited.has(neighbor)) dfs(neighbor, groupEdges);
+        });
+      }
+      Object.keys(graph).forEach(node => {
+        if (!visited.has(node)) {
+          const group = [];
+          dfs(node, group);
+          if (group.length > 0) subgraphs.push(group);
+        }
+      });
+      return subgraphs;
+    }
+   
+    // Show design pattern section by default
+    showSection('design-pattern');
+   
+    // Add event listener to ensure graphs are properly initialized when dependency graphs section is shown
+    document.querySelector('button[onclick="showSection(\'dependency-graphs\')"]').addEventListener('click', function() {
+      // Show the first graph by default when switching to the dependency graphs section
+      setTimeout(() => {
+        showGraph('dependency-graph-1');
+      }, 100);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+1. Cost Estimation
+1.1 Java Spark Runtime Cost
+Cluster Configuration:
+- Number of Executors: 10
+- Executor Memory: 16 GB
+- Driver Memory: 8 GB
+
+Approximate Data Volume Processed:
+- Total Input Data: ~3 TB
+- Active Data Processed: ~10–15% (~300–450 GB)
+
+Time Taken for Each Phase:
+- Filtering and Sorting: ~2 hours
+- Output Writes: ~1 hour
+
+Cost Model:
+- Databricks Enterprise DBU Cost: $0.25–$0.60 per hour
+- Estimated Runtime Cost: (3 hours * 10 executors * $0.60) = $18.00
+
+Justification:
+- Filtering and sorting operations are shuffle-heavy, requiring significant memory and compute.
+- Output writes involve moderate I/O overhead.
+
+2. Code Fixing and Data Recon Testing Effort Estimation
+2.1 Estimated Effort in Hours
+Manual Intervention and Solutions:
+- Explicit schema definitions for 38 datasets: 10 hours
+- Refactoring OUTPUT statements to Spark write APIs: 8 hours
+- Managing schema consistency: 5 hours
+
+Data Recon and Pipeline Testing:
+- Test case creation: 10 hours
+- Validation of intermediate datasets: 15 hours
+- Output comparison: 10 hours
+
+Optimization Techniques:
+- Partitioning and caching: 5 hours
+- Catalyst optimizer hints: 3 hours
+
+Total Estimated Effort: 66 hours
+
+Major Contributors:
+- Schema definitions and consistency management.
+- Validation of intermediate datasets and output comparison.
+
+3. API Cost
+apiCost: 0.013452 USD
+```

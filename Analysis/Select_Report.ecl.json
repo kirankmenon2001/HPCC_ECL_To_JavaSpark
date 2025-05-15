@@ -1,0 +1,112 @@
+{
+    "Select_Report.ecl": {
+    "1. Script Overview": {
+    "Summary": "This ECL script extracts and organizes clinical trial data from the AACT database based on a predefined set of NCT IDs. It aims to provide structured outputs for various aspects of clinical trials, such as arm groups, authorities, interventions, and others. By filtering and sorting data, it addresses the business need for traceable and organized clinical trial information.",
+    "Functional Modules": [
+    "DATASET declarations: AACT library datasets are used.",
+    "TRANSFORM logic: None.",
+    "PROJECT operations: None.",
+    "OUTPUT operations: Used extensively to generate named outputs for filtered and sorted datasets."
+    ],
+    "Data Pipelines Overview": "The script processes datasets from the AACT library by filtering them based on a predefined set of NCT IDs. Each dataset is sorted by the NCT ID field and outputted with a specific name. This ensures that raw clinical trial data is transformed into organized outputs for downstream consumption."
+    },
+    "2. Complexity Metrics": {
+    "Total Lines of Code": 41,
+    "Dataset Count": 40,
+    "Transform Count and Types": [],
+    "Join Analysis": {
+    "Join Count": 0,
+    "Join Types": []
+    },
+    "Project, Sort, Dedup, Rollup Counts": {
+    "Project Count": 0,
+    "Sort Count": 40,
+    "Dedup Count": 0,
+    "Rollup Count": 0
+    },
+    "Child Workflows or Module Calls": 0,
+    "Output or Store Operations": 40,
+    "Conditional Logic Count": 1,
+    "Macro or Function Module Reuse": 0,
+    "Conversion Complexity Score": {
+    "Score (0–100)": 50,
+    "Reasoning": [
+    "High number of OUTPUT operations requiring manual refactoring.",
+    "Extensive use of SORT operations.",
+    "No complex TRANSFORMs or JOINs, simplifying migration."
+    ]
+    }
+    },
+    "3. Feature Compatibility Check": {
+    "Incompatible Features": [
+    "Implicit schema typing.",
+    "Recordsets and RECORD structures."
+    ],
+    "Examples of Challenging Constructs": [
+    "Implicit typing for datasets.",
+    "Global aggregates are not used but would be challenging if present."
+    ]
+    },
+    "4. Manual Adjustments for Java Spark Migration": {
+    "Transform Refactoring": "No TRANSFORMs are present, so no refactoring is needed.",
+    "Schema Redefinition": "Convert implicit RECORD structures into explicit case classes or schema definitions in Spark.",
+    "Join Handling Strategy": "No JOINs are present.",
+    "Complex Ops Handling": "Rewrite SORT operations using Spark's DataFrame API or RDD operations.",
+    "Output Refactoring": "Rewrite OUTPUT operations to save data in HDFS, Parquet, or other Spark-supported formats."
+    },
+    "5. Optimization Techniques in Spark": {
+    "Join Optimization": "Not applicable as no JOINs are present.",
+    "Partitioning Strategy": "Partition datasets based on NCT ID to optimize filtering and sorting.",
+    "Caching Strategy": "Cache intermediate results for frequently accessed datasets.",
+    "Code Optimization Techniques": "Use Catalyst optimizer hints and DataFrame API improvements for SORT operations.",
+    "Refactor vs Rebuild Recommendation": {
+    "Approach": "Refactor with minimal changes.",
+    "Justification": "The script is simple and modular, making it easier to refactor without requiring a complete rebuild."
+    }
+    },
+    "6. Cost Estimation": {
+    "Java Spark Runtime Cost": {
+    "Cluster Configuration": {
+    "Number of Executors": 4,
+    "Executor Memory": "16 GB",
+    "Driver Memory": "8 GB"
+    },
+    "Approximate Data Volume Processed": {
+    "Input Data": "50–100 GB",
+    "Output Data": "10–15 GB"
+    },
+    "Time Taken for Each Phase": {
+    "Shuffle-heavy Joins": "Not applicable.",
+    "Wide Transforms": "3 hours.",
+    "Output Writes": "1 hour."
+    },
+    "Cost Model": {
+    "Pricing Basis": "AWS EMR pricing at $0.11 per vCPU-hour.",
+    "Total Estimated Cost": "$50–100 based on runtime and cluster configuration."
+    },
+    "Justification": [
+    "Cluster configuration ensures sufficient memory and compute resources for SORT-heavy operations.",
+    "Pricing estimates are based on typical cloud provider costs for Spark workloads."
+    ]
+    }
+    },
+    "7. Code Fixing and Data Recon Testing Effort Estimation": {
+    "Estimated Effort in Hours": {
+    "Manual Refactoring": 20,
+    "Data Reconciliation Testing": 15,
+    "Syntax Translation Adjustments": 10,
+    "Optimization and Performance Tuning": 10
+    },
+    "Major Contributors to Effort": {
+    "Nested TRANSFORM Refactoring": 0,
+    "Output Refactoring for Spark Writes": 10,
+    "Schema Management Effort": 10
+    }
+    },
+    "8. API Cost": {
+    "apiCost": "0.013452 USD"
+    }
+    }
+    }
+    
+    

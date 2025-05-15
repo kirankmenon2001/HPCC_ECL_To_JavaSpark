@@ -1,0 +1,133 @@
+<!-- File: patterns.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <p style="text-align: center; margin-bottom: 30px;">
+    <a href="index.html" style="font-size: 18px; text-decoration: none;">
+      <i class="fas fa-home"></i> Home
+    </a>
+  </p>
+  <title>Pattern Summary</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: "Times New Roman", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 30px;
+      color: #000;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 18px;
+      border: 1px solid #ddd;
+      text-align: left;
+      background-color: #fff;
+      transition: background-color 0.3s ease;
+    }
+
+    th {
+      background-color: #f1f1f1;
+      font-weight: bold;
+      color: #333;
+    }
+
+    tr:hover td {
+      background-color: #f9f9f9;
+    }
+
+    a {
+      text-decoration: none;
+      color: #0066cc;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="images/ASCENDION.png" alt="Ascendion Logo">
+    <img src="images/DMS.jpg" alt="DMS Logo">
+  </header>
+
+  <main>
+    <h1>Pattern Summary</h1>
+    <table id="pattern-summary-table">
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>Frequency</th>
+          <th>Percentage</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows will be dynamically populated here -->
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    fetch('Design_Pattern.json')
+      .then(response => response.json())
+      .then(data => {
+        const tableBody = document.getElementById('pattern-summary-table').querySelector('tbody');
+
+        data.pattern_summary.forEach(pattern => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><a href="pattern-detail.html?pattern=${encodeURIComponent(pattern.pattern)}">${pattern.pattern}</a></td>
+            <td>${pattern.frequency}</td>
+            <td>${pattern.percentage}</td>
+            <td>${pattern.description}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      });
+  </script>
+
+</body>
+</html>

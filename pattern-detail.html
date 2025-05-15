@@ -1,0 +1,142 @@
+<!-- File: pattern-detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pattern Detail</title>
+  <style>
+    body {
+      font-family: "Times New Roman", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 30px;
+      color: #000;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background-color: #fff;
+    }
+
+    table th, table td {
+      padding: 14px 18px;
+      border: 1px solid #ddd;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table th {
+      background-color: #f1f1f1;
+      width: 250px;
+    }
+
+    table tr:hover td {
+      background-color: #f9f9f9;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="images/ASCENDION.png" alt="Ascendion Logo">
+    <img src="images/DMS.jpg" alt="DMS Logo">
+  </header>
+
+  <main>
+    <h1>Design Pattern Detail</h1>
+    <div id="patternDetail">Loading...</div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const patternName = params.get('pattern');
+
+    fetch('Design_Pattern.json')
+      .then(response => response.json())
+      .then(data => {
+        const pattern = data.detailed_patterns.find(p => p.pattern === patternName);
+        const container = document.getElementById('patternDetail');
+
+        if (!pattern) {
+          container.innerText = "Pattern not found.";
+          return;
+        }
+
+        container.innerHTML = `
+          <table>
+            <tr>
+              <th>Pattern</th>
+              <td>${pattern.pattern}</td>
+            </tr>
+            <tr>
+              <th>Description</th>
+              <td>${pattern.description}</td>
+            </tr>
+            <tr>
+              <th>Spark Suitability</th>
+              <td>${pattern.spark_suitability}</td>
+            </tr>
+            <tr>
+              <th>Recommendations</th>
+              <td>
+                <ul>
+                  ${pattern.recommendations.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </td>
+            </tr>
+          </table>
+          <p><a href="index.html">← Back to Summary</a></p>
+        `;
+      });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+    "ARM_ID_Analysis.ecl": {
+      "design_pattern": ["SF", "ST", "JL", "TAC", "TSC", "TAG", "Tem", "DUN", "DS", "TT", "OO"],
+      "oo_reason": "The code uses a custom ROLLUP transformation logic not fitting into predefined categories."
+    },
+    "Review_Data.ecl": {
+      "design_pattern": ["SF", "ST", "TAC", "TSC", "TAG", "Tem", "DS", "TT", "OO"],
+      "oo_reason": "The code includes extensive sampling and grouping logic for data exploration, which is unique and doesn't fit other categories."
+    },
+    "Analyze_Broken_File.ecl": {
+      "design_pattern": ["SF", "ST", "SA", "TAC", "TSC", "TX", "TAG", "JL", "Tem", "DQ", "DS", "TF", "TT", "OO"],
+      "oo_reason": "The code leverages virtual file position and regex operations, which are not explicitly categorized but are essential for data parsing and transformation logic."
+    },
+    "Select_Report.ecl": {
+      "design_pattern": ["SF", "ST", "SA", "DS", "TF", "TT", "OO"],
+      "oo_reason": "The code uses external modules and predefined datasets (e.g., AACT) for sorting and output operations, which are not explicitly categorized but are integral to the workflow."
+    },
+    "NCT_ID_Analysis.ecl": {
+      "design_pattern": ["SF", "ST", "SA", "TAC", "TSC", "TAG", "JL", "Tem", "DQ", "DM", "DUN", "DA", "DS", "TT", "OO"],
+      "oo_reason": "The file contains complex logic for data extraction, transformation, and aggregation that doesn't fit neatly into predefined categories, such as the use of custom macros and multi-step joins."
+    },
+    "spray_data.ecl": {
+      "design_pattern": ["SF", "SA", "TX", "Tem", "DA", "TF", "OO"],
+      "oo_reason": "The file includes operations for remote directory handling and dynamic spraying of files, which are specialized functionalities not covered by other categories."
+    },
+    "Review_raw_data.ecl": {
+      "design_pattern": ["SF", "ST", "SA", "TX", "TAC", "TSC", "TAG", "Tem", "DS", "DQ", "TT", "OO"],
+      "oo_reason": "The code uses a macro (`Analyze_File`) for dynamic file analysis and includes regex-based transformations, which are unique to the file's purpose and not directly categorized under existing patterns."
+    }
+} 
