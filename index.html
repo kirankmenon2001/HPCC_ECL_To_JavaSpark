@@ -132,8 +132,31 @@
     .graph-container.active {
       display: flex;
     }
+    .dropdown-content a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  font-family: 'Times New Roman', Times, serif;
+}
+ 
+.dropdown-content a:hover {
+  background-color: #f0f0f0;
+}
+ 
   </style>
 </head>
+<!-- Inline Documentation Container for Root Node Click -->
+<div id="inline-documentation" style="display:none; margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #fafafa;">
+  <button id="back-btn" style="margin-bottom: 15px; padding: 6px 12px; font-family: 'Times New Roman', serif; font-weight: bold;">
+    ← Back
+  </button>
+  <div id="inline-doc-content">
+    <!-- Documentation list will be cloned here dynamically -->
+  </div>
+</div>
+ 
+ 
 <body>
   <div class="logo-container">
     <img src="images/ASCENDION.png" alt="Ascendion Logo">
@@ -149,8 +172,66 @@
     <button class="toggle-btn" onclick="showSection('analysis-plan')">JavaSpark</button>
   </div>
  
+ 
   <div id="design-pattern" class="section">
     <h2>Design Pattern</h2>
+    <div style="position: relative;">
+  <h2 style="display: inline-block; margin: 0;">Design Pattern</h2>
+ 
+  <!-- Info icon at top-right -->
+  <span id="legend-toggle"
+        style="cursor: pointer; font-weight: bold; font-size: 24px; position: absolute; right: 10px; top: 0;"
+        title="Click to show/hide legend">&#9432;</span>
+ 
+  <!-- Hidden legend container -->
+  <div id="legend-popup" style="
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 30px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    padding: 15px;
+    max-width: 320px;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    z-index: 100;
+  ">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th style="border-bottom: 1px solid #ccc; text-align: left; padding: 6px;">Short Form</th>
+          <th style="border-bottom: 1px solid #ccc; text-align: left; padding: 6px;">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 4px;">SF</td><td style="padding: 4px;">Source File</td></tr>
+        <tr><td style="padding: 4px;">ST</td><td style="padding: 4px;">Source Table</td></tr>
+        <tr><td style="padding: 4px;">SA</td><td style="padding: 4px;">Source API</td></tr>
+        <tr><td style="padding: 4px;">TAC</td><td style="padding: 4px;">Transformation Arithmetic Calcs</td></tr>
+        <tr><td style="padding: 4px;">TSC</td><td style="padding: 4px;">Transformation Stats Calcs</td></tr>
+        <tr><td style="padding: 4px;">TX</td><td style="padding: 4px;">Transformation External Code</td></tr>
+        <tr><td style="padding: 4px;">TAG</td><td style="padding: 4px;">Transformation Aggregate Functions like Sum, Count</td></tr>
+        <tr><td style="padding: 4px;">JL</td><td style="padding: 4px;">Join with Another Table</td></tr>
+        <tr><td style="padding: 4px;">Tem</td><td style="padding: 4px;">Temporary Tables/Files</td></tr>
+        <tr><td style="padding: 4px;">DQ</td><td style="padding: 4px;">Data Quality and Rejection</td></tr>
+        <tr><td style="padding: 4px;">DU</td><td style="padding: 4px;">DML - Update</td></tr>
+        <tr><td style="padding: 4px;">DI</td><td style="padding: 4px;">DML - Insert</td></tr>
+        <tr><td style="padding: 4px;">DD</td><td style="padding: 4px;">DML - Delete</td></tr>
+        <tr><td style="padding: 4px;">DM</td><td style="padding: 4px;">DML - Merge</td></tr>
+        <tr><td style="padding: 4px;">DUN</td><td style="padding: 4px;">DML - Union</td></tr>
+        <tr><td style="padding: 4px;">DA</td><td style="padding: 4px;">DML - Append</td></tr>
+        <tr><td style="padding: 4px;">DS</td><td style="padding: 4px;">DML - Sort</td></tr>
+        <tr><td style="padding: 4px;">TF</td><td style="padding: 4px;">Target File</td></tr>
+        <tr><td style="padding: 4px;">TT</td><td style="padding: 4px;">Target Table</td></tr>
+        <tr><td style="padding: 4px;">TA</td><td style="padding: 4px;">Target API</td></tr>
+        <tr><td style="padding: 4px;">OO</td><td style="padding: 4px;">Others not in above category</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+ 
     <h3><a href="patterns.html">List of Design Patterns</a></h3>
     <input type="text" id="pattern-search" placeholder="Search pattern..." style="margin-bottom: 15px; padding: 8px; width: 100%; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
     <ol id="pattern-list"></ol>
@@ -174,13 +255,24 @@
   <div id="dependency-graphs" class="section">
     <h2>Dependency Graph Visualizations</h2>
     <div style="text-align: center; margin: 20px 0;">
-      <button class="graph-btn" onclick="showGraph('dependency-graph-1')">Dependency Graph 1</button>
-      <button class="graph-btn" onclick="showGraph('dependency-graph-2')">Dependency Graph 2</button>
-      <button class="graph-btn" onclick="showGraph('radial-dependency')">Radial Dependency Chart</button>
-      <button class="graph-btn" onclick="showGraph('circle-packing')">Circle Packing Dependency</button>
-      <button class="graph-btn" onclick="showGraph('treemap-dependency')">Treemap of Dependencies</button>
-      <button class="graph-btn" onclick="showGraph('root-dependency')">Root Files Graph</button>
+      <div class="dropdown" style="display: inline-block; position: relative;">
+  <button class="graph-btn">Dependency Graphs ▼</button>
+  <div class="dropdown-content" style="
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+  ">
+    <a href="#" onclick="showGraph('dependency-graph-1'); hideDropdown(event);">Dependency Graph 1</a>
+    <a href="#" onclick="showGraph('dependency-graph-2'); hideDropdown(event);">Dependency Graph 2</a>
+  </div>
+</div>
  
+      <button class="graph-btn" onclick="showGraph('radial-dependency')">Radial Dependency Chart</button>
+      <button class="graph-btn" onclick="showGraph('treemap-dependency')">Treemap of Dependencies</button>
     </div>
  
     <!-- Graph containers -->
@@ -192,26 +284,12 @@
       <svg id="radial"></svg>
     </div>
  
-    <!-- Circle Packing Container -->
-    <div id="circle-packing" class="graph-container">
-      <div class="graph-title">Circle Packing Dependency</div>
-      <svg id="circlepacking"></svg>
-    </div>
- 
    
-    <div id="root-dependency" class="graph-container">
-      <div class="graph-title">Root Dependency Files</div>
-      <svg id="root-graph"></svg>
-    </div>
- 
-   
-    <!-- Treemap Container -->
+<!-- Treemap Container -->
     <div id="treemap-dependency" class="graph-container">
       <div class="graph-title">Treemap of Dependencies</div>
       <svg id="treemap"></svg>
-      <div id="treemap-legend" style="margin: 20px; font-family: 'Times New Roman', Times, serif;">
-      <h3>Legend: Root File Colors</h3>
-      <ul style="list-style-type: none; padding: 0;" id="legend-list"></ul>
+     
     </div>
   </div>
  
@@ -355,7 +433,8 @@
             );
  
           const label = g.append("g").selectAll("text").data(nodes).join("text")
-            .attr("class", "label").text(d => d.id);
+            .attr("class", "label").text(d => d.id.replace(/^file_/i, '').replace(/^File_/, ''));
+ 
  
           simulation.on("tick", () => {
             link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
@@ -370,6 +449,8 @@
             const radius = Math.min(width, height) / 2;
             const radialLayout = d3.cluster().size([2 * Math.PI, radius - 100]);
             radialLayout(radialRoot);
+            const isRootFile = (name) => Object.keys(data).includes(name);
+ 
  
             const radialSvg = d3.select("#radial")
                 .attr("viewBox", [-width / 2, -height / 2, width, height]);
@@ -392,7 +473,17 @@
                 .join("circle")
                 .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`)
                 .attr("r", 3)
-                .attr("fill", "#69b3a2");
+                .attr("fill", "#69b3a2")
+.style("cursor", "pointer")
+.on("click", (event, d) => {
+  const fileName = d.data.name;
+ 
+  // Open the documentation page for this file
+  window.location.href = `file-detail.html?file=${encodeURIComponent(fileName)}`;
+});
+ 
+ 
+ 
  
             radialSvg.append("g")
                 .selectAll("text")
@@ -406,156 +497,36 @@
                 .attr("dy", "0.31em")
                 .attr("x", d => d.x < Math.PI ? 6 : -6)
                 .style("text-anchor", d => d.x < Math.PI ? "start" : "end")
-                .text(d => d.data.name);
-                fetch('dependency.json')
-  .then(res => res.json())
-  .then(data => {
-    const width = 600, height = 600;
+                .text(d => d.data.name.replace(/^file_/i, '').replace(/^File_/, ''));
  
-    const root = d3.hierarchy(buildTree(data))
-      .sum(() => 1)
-      .sort((a, b) => b.value - a.value);
- 
-    const pack = d3.pack().size([width, height]).padding(5);
-    pack(root);
- 
-    const color = d3.scaleOrdinal(d3.schemeTableau10);
- 
-    const svg = d3.select("#circlepacking")
-      .attr("viewBox", [0, 0, width, height])
-      .style("font", "12px sans-serif");
- 
-    const tooltip = d3.select("body").append("div")
-      .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("background", "#222")
-      .style("color", "#fff")
-      .style("padding", "6px 10px")
-      .style("border-radius", "4px")
-      .style("pointer-events", "none")
-      .style("font-size", "12px")
-      .style("opacity", 0);
- 
-    const g = svg.append("g");
- 
-    const node = g.selectAll("circle")
-      .data(root.descendants())
-      .join("circle")
-      .attr("transform", d => `translate(${d.x},${d.y})`)
-      .attr("r", d => d.r)
-      .attr("fill", d => color(d.depth))
-      .attr("stroke", "#333")
-      .attr("stroke-width", 1)
-      .on("mouseover", (event, d) => {
-        tooltip.style("opacity", 1).html(`<strong>${d.data.name}</strong>`);
-      })
-      .on("mousemove", event => {
-        tooltip.style("left", (event.pageX + 10) + "px")
-               .style("top", (event.pageY - 20) + "px");
-      })
-      .on("mouseout", () => tooltip.style("opacity", 0))
-      .on("click", (event, d) => zoom(d));
- 
-    const labels = g.selectAll("text")
-      .data(root.descendants())
-      .join("text")
-      .attr("transform", d => `translate(${d.x},${d.y})`)
-      .attr("text-anchor", "middle")
-      .attr("dy", ".35em")
-      .attr("pointer-events", "none")
-      .style("fill", "#fff")
-      .style("font-size", d => d.r / 3)
-      .text(d => d.children ? "" : d.data.name);
- 
-    let focus = root;
- 
-    function zoom(d) {
-      const transition = svg.transition()
-        .duration(750)
-        .tween("zoom", () => {
-          const i = d3.interpolateZoom([focus.x, focus.y, focus.r * 2], [d.x, d.y, d.r * 2]);
-          return t => zoomTo(i(t));
-        });
-      focus = d;
+               
+   
+  function getDependentsCount(target, data) {
+  let count = 0;
+  for (const [parent, children] of Object.entries(data)) {
+    if (children.includes(target)) {
+      count += 1;
     }
- 
-    function zoomTo(v) {
-      const k = width / v[2];
-      g.attr("transform", `translate(${width / 2 - v[0] * k},${height / 2 - v[1] * k}) scale(${k})`);
-    }
- 
-    zoomTo([root.x, root.y, root.r * 2]);
-  });
-  function createRootNodesGraph(data) {
-  const roots = Object.keys(data).filter(file =>
-    !Object.values(data).flat().includes(file)
-  );
-  const width = 400;
-  const height = roots.length * 80 + 40; // height based on number of nodes (80px spacing)
- 
-  // Set SVG size dynamically based on number of nodes
-  const svg = d3.select("#root-graph")
-    .attr("viewBox", [0, 0, width, height])
-    .style("font", "14px Times")
-    .call(
-      d3.zoom()
-        .scaleExtent([0.5, 5])
-        .on("zoom", (event) => {
-          g.attr("transform", event.transform);
-        })
-    );
- 
-  const g = svg.append("g");
- 
-  // Create nodes data with y positions spaced vertically
-  const nodes = roots.map((root, i) => ({
-    id: root,
-    x: width / 2,
-    y: 40 + i * 80
-  }));
- 
-  // Add circles (big circles)
-  const node = g.selectAll("circle")
-    .data(nodes)
-    .join("circle")
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y)
-    .attr("r", 30)  // bigger radius
-    .attr("fill", "#4cc9f0")
-    .attr("stroke", "#1d3557")
-    .attr("stroke-width", 2)
-    .style("cursor", "pointer")
-    .on("click", (event, d) => {
-      showSection('documentation-dependency');
-      const fileLinks = document.querySelectorAll('#doc-file-list li a');
-      fileLinks.forEach(link => {
-        if (link.textContent.trim() === d.id) {
-          link.scrollIntoView({ behavior: "smooth", block: "center" });
-          link.style.backgroundColor = "#ffe066";
-          setTimeout(() => link.style.backgroundColor = "", 2000);
-        }
-      });
-    })
-    .on("mouseover", function () {
-      d3.select(this).attr("fill", "#3a86ff");
-    })
-    .on("mouseout", function () {
-      d3.select(this).attr("fill", "#4cc9f0");
-    });
- 
-  // Add labels centered horizontally, vertically aligned to circles
-  const label = g.selectAll("text")
-    .data(nodes)
-    .join("text")
-    .attr("x", d => d.x)
-    .attr("y", d => d.y + 5) // adjust vertical alignment
-    .attr("text-anchor", "middle")
-    .attr("font-weight", "bold")
-    .attr("fill", "#1d3557")
-    .style("user-select", "none")
-    .text(d => d.id);
+  }
+  return count || 1; // return 1 if no dependents, to keep it visible
 }
  
+  function getFlatDependencyData(data) {
+  const countMap = {};
+ 
+  // Count how many times each file appears as a dependency
+  Object.values(data).flat().forEach(dep => {
+    countMap[dep] = (countMap[dep] || 0) + 1;
+  });
+ 
+  // Make sure all files from the keys are also included (some may have 0 dependents)
+  Object.keys(data).forEach(file => {
+    if (!countMap[file]) countMap[file] = 0;
+  });
+ 
+  // Convert to flat array of { name, value }
+  return Object.entries(countMap).map(([name, value]) => ({ name, value }));
+}
  
   fetch('dependency.json')
   .then(res => res.json())
@@ -563,9 +534,12 @@
    
     const width = 400, height = 300;
  
-    const root = d3.hierarchy(buildTree(data))
-      .sum(() => 1)
-      .sort((a, b) => b.value - a.value);
+    const flatData = getFlatDependencyData(data);
+ 
+const root = d3.hierarchy({ children: flatData })
+  .sum(d => d.value)
+  .sort((a, b) => b.value - a.value);
+ 
  
     d3.treemap()
       .size([width, height])
@@ -581,19 +555,28 @@
       .data(root.leaves())
       .join("g")
       .attr("transform", d => `translate(${d.x0},${d.y0})`);
+    // Create a color scale based on number of dependents
+const colorScale = d3.scaleQuantize()
+  .domain(d3.extent(flatData, d => d.value)) // min and max values like 0–10
+  .range(d3.schemeBlues[6]); // 6 shades of blue
  
     node.append("rect")
       .attr("id", d => d.data.name)
       .attr("width", d => d.x1 - d.x0)
       .attr("height", d => d.y1 - d.y0)
-      .attr("fill", d => color(d.parent.data.name))
+      .attr("fill", d => colorScale(d.value))
+ // or any consistent color you want
+     
+ 
       .attr("stroke", "#fff")
       .on("mouseover", function () {
-        d3.select(this).attr("fill", "orange");
-      })
-      .on("mouseout", function (event, d) {
-        d3.select(this).attr("fill", color(d.parent.data.name));
-      });
+  d3.select(this).attr("stroke", "#333").attr("stroke-width", 2);
+})
+.on("mouseout", function () {
+  d3.select(this).attr("stroke", "#fff").attr("stroke-width", 1);
+})
+ 
+ 
  
     node.append("title")
       .text(d => `${d.data.name}\n${d.value}`);
@@ -601,42 +584,24 @@
     node.append("text")
       .attr("x", 3)
       .attr("y", 13)
-      .text(d => d.data.name)
+      .text(d => d.data.name.replace(/^file_/i, '').replace(/^File_/, ''))
+ 
       .attr("fill", "white")
       .style("font-size", "10px")
       .style("pointer-events", "none");
+    node.append("text")
+  .attr("x", 3)
+  .attr("y", 25) // position slightly lower than file name
+  .text(d => `(${d.value})`)
+  .attr("fill", "white")
+  .style("font-size", "10px")
+  .style("pointer-events", "none");
+ 
  
     // === Generate Legend for Root Files ===
-    const legendContainer = document.getElementById('legend-list');
-    const seen = new Set();
+   
  
-    root.leaves().forEach(d => {
-      const rootName = d.parent.data.name;
-      if (!seen.has(rootName)) {
-        seen.add(rootName);
- 
-        const li = document.createElement('li');
-        li.style.display = 'flex';
-        li.style.alignItems = 'center';
-        li.style.marginBottom = '6px';
- 
-        const colorBox = document.createElement('span');
-        colorBox.style.display = 'inline-block';
-        colorBox.style.width = '16px';
-        colorBox.style.height = '16px';
-        colorBox.style.marginRight = '10px';
-        colorBox.style.backgroundColor = color(rootName);
-        colorBox.style.border = '1px solid #333';
-        colorBox.style.borderRadius = '4px';
- 
-        const label = document.createElement('span');
-        label.textContent = rootName;
- 
-        li.appendChild(colorBox);
-        li.appendChild(label);
-        legendContainer.appendChild(li);
-      }
-    });
+     
     createRootNodesGraph(data);
  
   });
@@ -703,6 +668,38 @@
         showGraph('dependency-graph-1');
       }, 100);
     });
+    // Show/hide dropdown when main button is clicked
+document.querySelector('.dropdown .graph-btn').addEventListener('click', function () {
+  const dropdown = this.nextElementSibling;
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+});
+ 
+// Hide dropdown after selecting a graph
+function hideDropdown(event) {
+  event.preventDefault();
+  document.querySelectorAll('.dropdown-content').forEach(menu => menu.style.display = 'none');
+}
+document.getElementById('back-btn').addEventListener('click', () => {
+  // Hide the inline documentation container
+  document.getElementById('inline-documentation').style.display = 'none';
+ 
+  // Show the tabs container again
+  document.getElementById('tabs-container').style.display = 'block';
+ 
+  // Show the default tab (e.g., design-pattern)
+  showSection('design-pattern');
+});
+document.getElementById('legend-toggle').addEventListener('click', function() {
+  const legend = document.getElementById('legend-popup');
+  if (legend.style.display === 'block') {
+    legend.style.display = 'none';
+  } else {
+    legend.style.display = 'block';
+  }
+});
+ 
+ 
+ 
   </script>
 </body>
 </html>
